@@ -22,11 +22,11 @@ jobs:
           --health-cmd="healthcheck.sh"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=10
+          --health-retries=20
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+    - name: Checkout repo
+      uses: actions/checkout@v4
 
     - name: Set up JDK 17
       uses: actions/setup-java@v4
@@ -34,44 +34,51 @@ jobs:
         java-version: "17"
         distribution: "temurin"
 
-    - name: Wait for Oracle DB to be ready
+    - name: Wait for Oracle DB to start
+      shell: bash
       run: |
-        echo "Waiting for Oracle DB to start..."
-        for i in {1..30}; do
-          nc -z localhost 1521 && echo "Oracle is up!" && break
-          echo "Waiting..."
+        echo "Waiting for Oracle DB to become available..."
+        for i in {1..40}; do
+          nc -z localhost 1521 && echo "Oracle is UP!" && break
+          echo "Oracle not ready yet... retrying"
           sleep 10
         done
 
-    - name: Install SQL*Plus (Oracle Instant Client)
+    - name: Install SQLPlus dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y libaio1 unzip
-        wget https://download.oracle.com/otn_software/linux/instantclient/236000/instantclient-basiclite-linux.x64-23.6.zip
-        unzip instantclient-basiclite-linux.x64-23.6.zip
-        sudo mv instantclient* /opt/oracle
-        export LD_LIBRARY_PATH=/opt/oracle
-        echo "Instant Client Installed"
+        sudo apt-get install -y libaio1 unzip wget
 
-    - name: Create AUTOMATION user + table in Oracle
+    - name: Install Oracle Instant Client
       run: |
-        sudo apt-get install -y sqlplus
-        echo "ALTER SESSION SET CONTAINER = FREEPDB1;
-              CREATE USER AUTOMATION IDENTIFIED BY \"Auto@123\";
-              GRANT CREATE SESSION, CONNECT, RESOURCE, UNLIMITED TABLESPACE TO AUTOMATION;
-              CREATE TABLE AUTOMATION.USERS (
-                ID NUMBER PRIMARY KEY,
-                USERNAME VARCHAR2(50),
-                ROLE VARCHAR2(50)
-              );
-              " > setup.sql
-        docker exec oracle-free bash -c "cat /workspace/setup.sql | sqlplus sys/Oracle123@localhost:1521/FREEPDB1 as sysdba"
+        wget https://download.oracle.com/otn_software/linux/instantclient/236000/instantclient-basiclite-linux.x64-23.6.zip -O ic.zip
+        unzip ic.zip
+        sudo mv instantclient* /opt/oracle
+        echo "/opt/oracle" >> $GITHUB_PATH
 
-    - name: Build and run Maven tests
+    - name: Create AUTOMATION user and USERS table
+      run: |
+        cat <<EOF > setup.sql
+        ALTER SESSION SET CONTAINER = FREEPDB1;
+        CREATE USER AUTOMATION IDENTIFIED BY "Auto@123";
+        GRANT CREATE SESSION, CONNECT, RESOURCE, UNLIMITED TABLESPACE TO AUTOMATION;
+        CREATE TABLE AUTOMATION.USERS (
+          ID NUMBER PRIMARY KEY,
+          USERNAME VARCHAR2(50),
+          ROLE VARCHAR2(50)
+        );
+        EXIT;
+        EOF
+
+        docker exec $(docker ps -qf "name=oracle-free") bash -c "
+            echo exit | sqlplus sys/Oracle123@localhost:1521/FREEPDB1 AS SYSDBA @/workspace/setup.sql
+        "
+
+    - name: Run Maven tests
       run: mvn -B clean test
 
-    - name: Upload Extent Report & Logs
-      uses: actions/upload-artifact@v3
+    - name: Upload Artifacts (Extent Report + Logs)
+      uses: actions/upload-artifact@v4
       with:
         name: test-reports
         path: |
