@@ -80,3 +80,15 @@ jobs:
         path: |
           logs/**/*.log
           logs/**/*.html
+
+    - name: Copy report for GitHub Pages
+      run: |
+        mkdir -p gh-pages
+        cp logs/*.html gh-pages/
+
+    - name: Deploy report to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: gh-pages
+
