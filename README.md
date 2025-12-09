@@ -10,6 +10,7 @@ Ensure "Docker Engine is running".
 ---
 
 ## 2. Fix docker command not found  
+MacOS: 
 ```bash
 sudo ln -s /Applications/Docker.app/Contents/Resources/bin/docker /usr/local/bin/docker
 ```
@@ -17,6 +18,8 @@ sudo ln -s /Applications/Docker.app/Contents/Resources/bin/docker /usr/local/bin
 ---
 
 ## 3. Fix credential helpers  
+MacOS: 
+
 ```bash
 sudo ln -s /Applications/Docker.app/Contents/Resources/bin/docker-credential-desktop /usr/local/bin/
 sudo ln -s /Applications/Docker.app/Contents/Resources/bin/docker-credential-osxkeychain /usr/local/bin/
@@ -25,6 +28,8 @@ sudo ln -s /Applications/Docker.app/Contents/Resources/bin/docker-credential-osx
 ---
 
 ## 4. Fix PATH (.zshrc)  
+MacOS: 
+
 ```bash
 export PATH="/usr/local/bin:/Applications/Docker.app/Contents/Resources/bin:$PATH"
 ```
@@ -32,6 +37,8 @@ export PATH="/usr/local/bin:/Applications/Docker.app/Contents/Resources/bin:$PAT
 ---
 
 ## 5. Pull Oracle Free Database  
+MacOS: 
+
 ```bash
 docker pull gvenzl/oracle-free
 ```
@@ -39,6 +46,8 @@ docker pull gvenzl/oracle-free
 ---
 
 ## 6. Run Oracle Database Container  
+MacOS: 
+
 ```bash
 docker run -d --name oracle-free -p 1521:1521 -e ORACLE_PASSWORD=Oracle123 gvenzl/oracle-free
 ```
@@ -88,4 +97,3 @@ INSERT + SELECT operations work successfully.
 
 ---
 
-Generated automatically by ChatGPT.
