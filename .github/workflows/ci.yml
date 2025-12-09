@@ -47,7 +47,8 @@ jobs:
     - name: Install SQLPlus dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y libaio1 unzip wget
+        sudo apt-get install -y libaio-dev unzip wget
+
 
     - name: Install Oracle Instant Client
       run: |
