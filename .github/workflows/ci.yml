@@ -84,3 +84,18 @@ jobs:
         path: |
           logs/**/*.log
           logs/**/*.html
+
+    - name: Upload a Build Artifact
+      if: always()
+      uses: actions/upload-artifact@v5.0.0
+      with:
+        name: Logs
+        path: logs/
+
+    - name: Publish Test Report
+      if: always()
+      uses: dorny/test-reporter@v1
+      with:
+        name: TestNG Results
+        path: target/surefire-reports/junitreports/TEST-*.xml
+        reporter: java-junit
