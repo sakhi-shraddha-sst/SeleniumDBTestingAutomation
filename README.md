@@ -1,5 +1,4 @@
 # Oracle Database + Docker + Java Automation Framework  
-Complete working setup notes.
 
 ---
 
