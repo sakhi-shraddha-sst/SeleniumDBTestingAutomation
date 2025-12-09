@@ -1,4 +1,5 @@
 # Oracle Database + Docker + Java Automation Framework  
+![CI](https://github.com/shraddha/my-oracle-automation/actions/workflows/ci.yml/badge.svg)
 
 ---
 
