@@ -1,5 +1,5 @@
 # Oracle Database + Docker + Java Automation Framework  
-![CI](https://github.com/sakhi-shraddha-sst/my-oracle-automation/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/sakhi-shraddha-sst/SeleniumDBTestingAutomation/actions/workflows/ci.yml/badge.svg)
 
 ---
 
