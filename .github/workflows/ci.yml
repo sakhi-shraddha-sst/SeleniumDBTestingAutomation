@@ -45,26 +45,30 @@ jobs:
 
     - name: Create user + table inside Oracle (using Docker SQLPlus)
       run: |
-        echo "Running SQL commands in Oracle container..."
-        docker exec $(docker ps -qf "name=oracle-free") bash -c "
-          echo '
-            ALTER SESSION SET CONTAINER = FREEPDB1;
+        echo "Finding Oracle container..."
+        ORACLE_CID=$(docker ps -q --filter "ancestor=gvenzl/oracle-free")
+        echo "Oracle Container ID: $ORACLE_CID"
 
-            CREATE USER AUTOMATION IDENTIFIED BY \"Auto@123\";
-            GRANT CREATE SESSION, CONNECT, RESOURCE, UNLIMITED TABLESPACE TO AUTOMATION;
+        echo "Running SQL commands..."
+        docker exec $ORACLE_CID bash -c "
+        echo '
+        ALTER SESSION SET CONTAINER = FREEPDB1;
 
-            ALTER SESSION SET CURRENT_SCHEMA = AUTOMATION;
+        CREATE USER AUTOMATION IDENTIFIED BY \"Auto@123\";
+        GRANT CREATE SESSION, CONNECT, RESOURCE, UNLIMITED TABLESPACE TO AUTOMATION;
 
-            CREATE TABLE USERS (
-              ID NUMBER PRIMARY KEY,
-              USERNAME VARCHAR2(50),
-              ROLE VARCHAR2(50)
-            );
+        ALTER SESSION SET CURRENT_SCHEMA = AUTOMATION;
 
-            INSERT INTO USERS VALUES (1, '\''githubuser'\'', '\''QA'\'');
-            COMMIT;
+        CREATE TABLE USERS (
+          ID NUMBER PRIMARY KEY,
+          USERNAME VARCHAR2(50),
+          ROLE VARCHAR2(50)
+        );
+
+        INSERT INTO USERS VALUES (1, '\''githubuser'\'', '\''QA'\'');
+        COMMIT;
           ' | sqlplus sys/Oracle123@localhost:1521/FREEPDB1 as sysdba
-        "
+          "
 
     - name: Run Maven tests
       run: mvn -B clean test
