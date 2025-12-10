@@ -1,6 +1,12 @@
 # Oracle Database + Docker + Java Automation Framework  
 ![CI](https://github.com/sakhi-shraddha-sst/SeleniumDBTestingAutomation/actions/workflows/ci.yml/badge.svg)
 
+## 📊 Latest Automation Test Report
+
+Access the latest Extent Report here:
+
+➡️ [Latest Report](https://github.com/sakhi-shraddha-sst/SeleniumDBTestingAutomation.github.io/index.html)
+
 ---
 
 ## 1. Install Docker Desktop  
