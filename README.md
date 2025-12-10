@@ -5,7 +5,7 @@
 
 Access the latest Extent Report here:
 
-➡️ [Latest Report](https://github.com/sakhi-shraddha-sst/SeleniumDBTestingAutomation.github.io/index.html)
+➡️ [Latest Report](https://sakhi-shraddha-sst.github.io/SeleniumDBTestingAutomation/ExtentReport.html)
 
 ---
 
