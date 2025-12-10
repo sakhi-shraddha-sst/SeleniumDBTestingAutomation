@@ -86,10 +86,17 @@ jobs:
           logs/**/*.log
           logs/**/*.html
 
-    - name: Copy report for GitHub Pages
+    - name: Debug - Show all files
       run: |
-        mkdir -p gh-pages
-        cp logs/*.html gh-pages/
+          echo "Listing workspace files..."
+          ls -R .
+
+    - name: Copy HTML Reports to gh-pages folder
+      run: |
+          mkdir -p gh-pages
+          find . -name "*.html" -exec cp {} gh-pages/ \;
+          ls -R gh-pages
+
 
     - name: Deploy report to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
